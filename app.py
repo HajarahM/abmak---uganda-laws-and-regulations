@@ -2,6 +2,7 @@
 from gradientai import Gradient
 import os
 import requests
+import html2text
 import streamlit as st
 from streamlit.logger import get_logger
 
@@ -41,7 +42,9 @@ def main() -> None:
 		
 		response = requests.post(url, json=payload, headers=headers)
 
-		st.write(response.text)
+		output = html2text.html2text(response.text)
+
+		st.write(output)
 
 if __name__ == "__main__":
 	main()
