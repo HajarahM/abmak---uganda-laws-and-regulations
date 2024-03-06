@@ -5,3 +5,4 @@ pydeck
 streamlit
 gradientai
 requests
+html2text
