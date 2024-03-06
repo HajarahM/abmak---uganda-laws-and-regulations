@@ -7,13 +7,17 @@ from streamlit.logger import get_logger
 
 LOGGER = get_logger(__name__)
 
-COLLECTIONID = st.secrets.collectionid
-WORKSPACEID = st.secrets.workspaceid
-AUTHORIZATION = st.secrets.autorization
+COLLECTIONID = st.secrets.GRADIENT_COLLECTION_ID
+WORKSPACEID = st.secrets.GRADIENT_WORKSPACE_ID
+AUTHORIZATION = st.secrets.GRADIENT_ACCESS_TOKEN
+
+os.environ['GRADIENT_COLLECTION_ID'] == st.secrets['GRADIENT_COLLECTION_ID']
+os.environ['GRADIENT_WORKSPACE_ID'] == st.secrets['GRADIENT_WORKSPACE_ID']
+os.environ['GRADIENT_ACCESS_TOKEN'] == st.secrets['GRADIENT_ACCESS_TOKEN']
 
 def main() -> None:
-	gradient = Gradient()
-	base_model = gradient.get_base_model(base_model_slug="mixtral-8x7b-instruct")
+	#gradient = Gradient()
+	#base_model = gradient.get_base_model(base_model_slug="mixtral-8x7b-instruct")
 	st.title ('Uganda Law Chatbot')
 	question = st.text_input ('Ask a question:')
 
