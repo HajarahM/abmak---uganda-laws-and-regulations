@@ -1,51 +1,50 @@
-# Copyright (c) Streamlit Inc. (2018-2022) Snowflake Inc. (2022)
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 
+from gradientai import Gradient
+import os
+import requests
+import html2text
 import streamlit as st
 from streamlit.logger import get_logger
 
 LOGGER = get_logger(__name__)
 
+COLLECTIONID = st.secrets.GRADIENT_COLLECTION_ID
+WORKSPACEID = st.secrets.GRADIENT_WORKSPACE_ID
+AUTHORIZATION = st.secrets.GRADIENT_ACCESS_TOKEN
 
-def run():
-    st.set_page_config(
-        page_title="Hello",
-        page_icon="👋",
-    )
+os.environ['GRADIENT_COLLECTION_ID'] == st.secrets['GRADIENT_COLLECTION_ID']
+os.environ['GRADIENT_WORKSPACE_ID'] == st.secrets['GRADIENT_WORKSPACE_ID']
+os.environ['GRADIENT_ACCESS_TOKEN'] == st.secrets['GRADIENT_ACCESS_TOKEN']
 
-    st.write("# Welcome to Streamlit! 👋")
+def main() -> None:
+	#gradient = Gradient()
+	#base_model = gradient.get_base_model(base_model_slug="mixtral-8x7b-instruct")
+	st.title ('Uganda Law Chatbot')
+	question = st.text_input ('Ask a question:')
 
-    st.sidebar.success("Select a demo above.")
+	url = "https://api.gradient.ai/api/blocks/answer"
 
-    st.markdown(
-        """
-        Streamlit is an open-source app framework built specifically for
-        Machine Learning and Data Science projects.
-        **👈 Select a demo from the sidebar** to see some examples
-        of what Streamlit can do!
-        ### Want to learn more?
-        - Check out [streamlit.io](https://streamlit.io)
-        - Jump into our [documentation](https://docs.streamlit.io)
-        - Ask a question in our [community
-          forums](https://discuss.streamlit.io)
-        ### See more complex demos
-        - Use a neural net to [analyze the Udacity Self-driving Car Image
-          Dataset](https://github.com/streamlit/demo-self-driving)
-        - Explore a [New York City rideshare dataset](https://github.com/streamlit/demo-uber-nyc-pickups)
-    """
-    )
+	if question:
+	
+		payload = {
+    			"source": {
+        		"type": "rag",
+        		"collectionId": COLLECTIONID
+    				},
+    			"question": question
+			}
+		headers = {
+    			"accept": "application/json",
+    			"x-gradient-workspace-id": WORKSPACEID,
+    			"content-type": "application/json",
+    			"authorization": AUTHORIZATION
+			}
+		
+		response = requests.post(url, json=payload, headers=headers)
 
+		output = html2text.html2text(response.text)
+
+		st.write(output)
 
 if __name__ == "__main__":
-    run()
+	main()
